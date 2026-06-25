@@ -56,43 +56,6 @@ class MultiScaleFusion(nn.Module):
 
         return output
 
-# class TransformerLayer(nn.Module):
-#     def __init__(self, dim, heads=8, dim_head=64, dropout=0.):
-#         super().__init__()
-#         self.heads = heads
-#         self.scale = dim_head ** -0.5
-#         inner_dim = dim_head * heads
-#
-#         # Linear layers for queries, keys, values
-#         self.to_qkv = nn.Linear(dim, inner_dim * 3, bias=False)
-#         self.to_out = nn.Sequential(
-#             nn.Linear(inner_dim, dim),
-#             nn.Dropout(dropout)
-#         )
-#
-#     def forward(self, x):
-#         # Ensure x and all operations are on the same device (e.g., GPU)
-#         device = x.device  # Get the device of the input tensor
-#         # Input shape: (B, C, H, W)
-#         B, C, H, W = x.shape  # Changed b, c, h, w to B, C, H, W
-#         # Reshape to sequence: (B, N, C), where N = H * W
-#         x = rearrange(x, 'B C H W -> B (H W) C')  # Changed b, h, w to B, H, W
-#         # Generate queries, keys, values
-#         qkv = self.to_qkv(x).chunk(3, dim=-1)
-#         # Move q, k, v to the same device as the input
-#         Q, K, V = [rearrange(t, 'B N (H D) -> B H N D', H=self.heads).to(device) for t in qkv]  # Changed q, k, v to Q, K, V
-#         # Scaled dot-product attention
-#         Dots = torch.einsum('B H I D, B H J D -> B H I J', Q, K) * self.scale
-#         Attn = Dots.softmax(dim=-1)
-#
-#         # Apply attention to values
-#         Out = torch.einsum('B H I J, B H J D -> B H I D', Attn, V)
-#         Out = rearrange(Out, 'B H N D -> B N (H D)')
-#         Out = self.to_out(Out)
-#         # Reshape back to 2D feature map: (B, C, H, W)
-#         return rearrange(Out, 'B (H W) C -> B C H W', H=H, W=W)
-
-
 def make_1step_sched(pretrained_model_name_or_path):
     noise_scheduler_1step = DDPMScheduler.from_pretrained(pretrained_model_name_or_path, subfolder="scheduler")
     noise_scheduler_1step.set_timesteps(1, device="cuda")
@@ -101,45 +64,29 @@ def make_1step_sched(pretrained_model_name_or_path):
 
 
 def my_vae_encoder_fwd(self, sample):
-    # keshihua(sample,'vae_encoder_conv_in')
     sample = self.conv_in(sample)
-    # keshihua(sample,'vae_encoder_after_conv_in')
-
     l_blocks = []
     # down
     i = 0
     for down_block in self.down_blocks:
         l_blocks.append(sample)
         sample = down_block(sample)
-        # keshihua(sample, str(i)+'vae_encoder_down')
         i = i + 1
 
     # middle
     sample = self.mid_block(sample)
-    # keshihua(sample,'vae_encoder_mid_block')
-
     sample = self.conv_norm_out(sample)
-    # keshihua(sample,'vae_encoder_conv_norm_out')
-
     sample = self.conv_act(sample)
-    # keshihua(sample,'vae_encoder_conv_act')
-
     sample = self.conv_out(sample)
-    # keshihua(sample,'vae_encoder_conv_act')
-
     self.current_down_blocks = l_blocks
     return sample
 
 def my_vae_decoder_fwd(self, sample, latent_embeds=None):
 
     sample = self.conv_in(sample)
-    # keshihua(sample,'vae_decoder_conv_in')
-
     upscale_dtype = next(iter(self.up_blocks.parameters())).dtype
     # middle
     sample = self.mid_block(sample, latent_embeds)
-    # keshihua(sample,'vae_decoder_mid_block')
-
     sample = sample.to(upscale_dtype)
 
     if not self.ignore_skip:
@@ -159,14 +106,9 @@ def my_vae_decoder_fwd(self, sample, latent_embeds=None):
         sample = self.conv_norm_out(sample)
     else:
         sample = self.conv_norm_out(sample, latent_embeds)
-    # keshihua(sample, 'vae_decoder_conv_norm_out')
 
     sample = self.conv_act(sample)
-    # keshihua(sample, 'vae_decoder_conv_act')
-
     sample = self.conv_out(sample)
-    # keshihua(sample, 'vae_decoder_conv_out')
-
     return sample
 
 def download_url(url, outf):
