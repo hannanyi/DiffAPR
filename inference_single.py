@@ -13,10 +13,8 @@ if __name__ == "__main__":
     parser.add_argument("--img_size", default=512, type=int)
     parser.add_argument("--dataset_folder", default='/data1/hn/code/ACP-main/img/real_damaged', type=str)
     parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument("--pretrained_model_name_or_path", default='/data1/hn/code/other_vision/img2img-turbo-liumask/sd-turbo_net')
-    parser.add_argument('--model_path', type=str,default='/data1/hn/code/ACP-main/output/pretrained/model30-52826.pkl')
-    # parser.add_argument('--model_path', type=str,default='/data1/hn/code/ACP-main/output/pretrained-256/model20-184500.pkl')
-
+    parser.add_argument("--pretrained_model_name_or_path", default='./sd-turbo_net')
+    parser.add_argument('--model_path', type=str,default='./checkpoint/model.pkl')
     parser.add_argument('--output_dir', type=str, default='./output', help='the directory to save the outputs')
     parser.add_argument('--seed', type=int, default=42, help='Random seed to be used')
     args = parser.parse_args()
