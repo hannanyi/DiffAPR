@@ -4,7 +4,6 @@ import ssl
 import yaml
 from torch import nn
 
-# 移除wandb导入，添加tensorboard导入
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -33,10 +32,7 @@ from src.utils.datasets import Dataset
 import src.utils.misc as misc
 import ssl
 
-# 添加tensorboard导入
 from torch.utils.tensorboard import SummaryWriter
-
-# from src.utils.newdegraded import build_shape_database
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -156,22 +152,10 @@ def main(args):
         power=args.lr_power,
     )
 
-    # hole_db, crack_db, missing_db = build_shape_database("/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/damaged1")
-    # np.save(
-    #     "/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/shape_db.npy",
-    #     {
-    #         "hole": hole_db,
-    #         "crack": crack_db,
-    #         "missing": missing_db
-    #     }
-    # )
 
     dataset_train = Dataset(
         img_size=args.resolution,
         dataset_folder=args.dataset_folder,
-        mold_patch_path="/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/mold_patch.npy",
-        mold_color_path="/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/mold_color.npy",
-        shape_db_path="/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/shape_db.npy",
         training=True
     )
     dl_train = torch.utils.data.DataLoader(
@@ -184,9 +168,6 @@ def main(args):
     dataset_val = Dataset(
         img_size=args.resolution,
         dataset_folder=args.dataset_folder,
-        mold_patch_path="/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/mold_patch.npy",
-        mold_color_path="/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/mold_color.npy",
-        shape_db_path="/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/shape_db.npy",
         valing=True
     )
     dl_val = torch.utils.data.DataLoader(
@@ -224,7 +205,6 @@ def main(args):
     # The trackers initializes automatically on the main process.
     if accelerator.is_main_process:
         tracker_config = dict(vars(args))
-        # 移除wandb初始化，使用tensorboard
         # accelerator.init_trackers(args.tracker_project_name, config=tracker_config)
 
     progress_bar = tqdm(range(0, args.max_train_steps), initial=0, desc="Steps",
@@ -253,8 +233,8 @@ def main(args):
             description="", verbose=True)
 
     # start the training loop
-    global_step = 195500
-    for epoch in range(15, args.num_training_epochs):
+    global_step = 0
+    for epoch in range(0, args.num_training_epochs):
         # 课程学习调度
         train_ds = accelerator.unwrap_model(dl_train).dataset
         # train_ds.set_curriculum_stage(4)
@@ -340,8 +320,7 @@ def main(args):
 
                     # 使用tensorboard记录标量值
                     if writer is not None:
-                        if global_step % config.tensorboard_freq == 0:  # 增加这个频率，比如从1改为100
-
+                        if global_step % config.tensorboard_freq == 0:  
                             writer.add_scalar('train/lossG', logs["lossG"], global_step)
                             writer.add_scalar('train/lossD', logs["lossD"], global_step)
                             writer.add_scalar('train/loss_l1', logs["loss_l1"], global_step)
@@ -437,9 +416,6 @@ def main(args):
 
                         gc.collect()
                         torch.cuda.empty_cache()
-
-                    # 移除accelerator.log调用，因为我们已经直接使用tensorboard
-                    # accelerator.log(logs, step=global_step)
 
     # 关闭tensorboard writer
     if writer is not None:
