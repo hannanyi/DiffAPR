@@ -73,54 +73,10 @@ def calculate_metrics(folder1, folder2):
 
 
 if __name__ == '__main__':
-    # folder1 = '/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/src-cut/clean_D_2000'
-    # folder1 = '/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/src-cut/clean_M_2000'
-    # folder1 = '/data1/hn/DataSets/Ancient Chinese Painting/real_damaged/src-cut/clean_F_2000'
-
-    # folder2 = '/data1/hn/code/ACP-main/output_newmold/real_mold'
-    # folder2 = '/data1/hn/code/ACP-main/output_newdamaged/real_damaged'
-    # folder2 = '/data1/hn/code/ACP-main/output_newfade/real_fade'
-    # folder2 = '/data1/hn/code/ACP-main/output_allchange/real_damaged'
-
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/OneStoneNet-main/OneStoneNet-blind/output/real_fade'
-
-    # folder2 = '/data1/hn/code/ACP-main/outputs/real_fade'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/Resfusion-main/resfusion_restore_test/results/real_damaged'
-
-
-    # folder1 = '/data1/hn/code/AttDiff Comparative experiment/APLRL-main/output/ground_truth'
-    # folder2 = '/data1/hn/code/ACP-main/outputs/output'
+   
     folder1 = '/data1/hn/DataSets/Ancient Chinese Painting/val'
-    # folder1 = '/data1/hn/code/AttDiff Comparative experiment/RePaint-main/log/test_p256_thick/gt'
-
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/GRL-Image-Restoration-main/output/real_fade'
-
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/FocalNet-main/Dehazing/OTS/results/FocalNet/D'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/FocalNet-main/Dehazing/OTS/results/FocalNet/real_damaged'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/FocalNet-main/Dehazing/OTS/results/FocalNet/real_mold'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/FocalNet-main/Dehazing/OTS/results/FocalNet/real_fade'
-
-
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/Restormer-main/results/F+M'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/Restormer-main/results/fade_2000'
-
-    # folder2 = '/data1/hn/code/AttDiff Comparative experiment/APLRL-main/output/generate'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/Blind_Omni_Wav_Net-main/outputs/D'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/OneStoneNet-main/OneStoneNet-blind/output/D'
-    # folder2 = '/data1/hn/code/Blind_Omni_Wav_Net-main/results/D'
-
-    # folder2 = '/data1/hn/code/ACP-main/outputs/D'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/NAFNet-main/outputs/F'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/NAFNet-main/outputs/fade_2000'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/TransCNN-HAE-master/checkpoints/results/D'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/TransCNN-HAE-master/checkpoints/results/real_fade'
-
-    # folder2 = '/data1/hn/code/AttDiff Comparative experiment/RePaint-main/log/ACP/inpainted'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/Resfusion-main/resfusion_restore_test/results/D+F+M'
-
-    folder2 = '/data1/hn/code/AttDiff Comparative experiment/StrDiffusion-main (1)/result/D'
-    # folder2 = '/data1/hn/code/AttDiff Comparative experiment/RePaint-main/log/ACP/inpainted'
-    # folder2 = '/data1/hn/code/DiffACP Comparative experiment/TransCNN-HAE-master/checkpoints/results/M'
+    folder2 = '/data1/hn/code/ACP-main/outputs/D'
+    
     res = calculate_metrics(folder1, folder2)
     print('lpips: %.4f' % res)
     with open('lpips.txt', 'w') as f:
